@@ -11,7 +11,7 @@
  * isArrayEmpty([1, 2]) // false
  * isArrayEmpty([undefined]) // false
  */
-export function isArrayEmpty<T>(array?: Array<T>) {
+export function isArrayEmpty<T>(array?: Array<T>): boolean {
   if (!array || typeof array !== 'object') {
     return true;
   }

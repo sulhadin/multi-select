@@ -1,41 +1,12 @@
 import '../index.css';
-import MultiSelect from './components/multiSelect/MultiSelect.tsx';
-import { useEffect, useState } from 'react';
-
-type Character = {
-  id: number;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-  origin: {
-    name: string;
-    url: string;
-  };
-  location: {
-    name: string;
-    url: string;
-  };
-  image: string;
-  episode: string[];
-  url: string;
-  created: string;
-};
+import MultiSelect from '@/multiSelect/MultiSelect.tsx';
+import useFetch from '@/hooks/useFetch.ts';
 
 function App() {
-  const [characters, setCharacters] = useState<Character[]>();
-
-  useEffect(() => {
-    fetch('https://rickandmortyapi.com/api/character')
-      .then(res => res.json())
-      .then(result => {
-        setCharacters(result.results as Character[]);
-      });
-  }, []);
+  const { characters } = useFetch();
 
   if (!characters) {
-    return <>loading"</>;
+    return <div className={'w-96 mx-auto'}>Loading..</div>;
   }
 
   return (

@@ -2,7 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "./src/components/multiSelect/multiSelect.css";
+@import "src/multiSelect/multiSelect.css";
 
 
 html, body {

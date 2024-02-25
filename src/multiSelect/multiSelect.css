@@ -5,16 +5,16 @@
     @apply flex flex-wrap gap-1 grow;
 }
 .multi-select .selected-items {
-    @apply inline-flex gap-1 p-1 rounded bg-neutral-200 items-center cursor-default;
+    @apply inline-flex gap-1 p-1 text-sm rounded bg-neutral-200 items-center cursor-default;
 }
 .multi-select .remove-selected-item {
     @apply bg-neutral-500 w-5 h-5 rounded inline-flex items-center text-sm justify-center text-white  hover:text-red-950 cursor-pointer hover:bg-red-300;
 }
-.multi-select .remove-selected-item .button-active {
+.multi-select .remove-selected-item.button-active {
     @apply bg-red-300 text-red-950 ;
 }
 .multi-select input {
-    @apply bg-transparent min-w-2 focus:ring-0 focus:outline-none flex-1;
+    @apply bg-transparent min-w-2 focus:ring-0 focus:outline-none flex-1 placeholder:text-sm;
 }
 .multi-select .chevron {
     @apply cursor-pointer text-neutral-500 transition-transform ease-in-out;

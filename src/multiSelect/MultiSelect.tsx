@@ -10,8 +10,8 @@ import {
 import clsx from 'clsx';
 
 import useFilter from '@/libs/useFilter.ts';
-import MultiSelectOption from '@Components/multiSelect/MultiSelectOption.tsx';
-import { SearchContext } from '@Components/multiSelect/multiSelectContext.ts';
+import MultiSelectOption from '@/multiSelect/MultiSelectOption.tsx';
+import { SearchContext } from '@/multiSelect/multiSelectContext.ts';
 
 /**
  * BaseObject serves as a base interface for objects with a numeric or string id and possibly
@@ -167,7 +167,7 @@ const MultiSelect = <T extends BaseObject>({
   };
 
   const handleBackspace = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace') {
+    if (e.key === 'Backspace' && !searchText) {
       setSelectedItems(state => {
         if (state.length === 0) {
           return state;

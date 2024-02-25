@@ -1,5 +1,5 @@
 {
-  "name": "my-vue-app",
+  "name": "multi-select-component",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier": "prettier --write **/*.ts",
-    "build:css": "npx tailwindcss -i ./index.css -o ./output.css --watch"
+    "build:css": "npx tailwindcss -i ./index.css -o ./output.css"
   },
   "dependencies": {
     "clsx": "^2.1.0",

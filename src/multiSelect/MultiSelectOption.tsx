@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-import Highlighter from '@Components/multiSelect/Highlighter.tsx';
-import { useGetSearchedText } from '@Components/multiSelect/multiSelectContext.ts';
+import Highlighter from '@/multiSelect/Highlighter.tsx';
+import { useGetSearchedText } from '@/multiSelect/multiSelectContext.ts';
 
 type MultiSelectOptionType = {
   /** URL of the option image.*/
