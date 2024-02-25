@@ -1,13 +1,23 @@
 import { useState } from 'react';
+import debounce from 'lodash.debounce';
+
 import { isArrayEmpty } from '@/libs/isArrayEmpty.ts';
 
 type FilterType<T> = {
-  /** The predicate function to filter items outside of the hook. */
+  /** The predicate function to filter items outside the hook. */
   predicate: (item: T, search: string) => unknown;
   /** The array of items to be filtered. */
   data: T[];
   /** The initial returned array of items before filtered. */
   initialData: T[];
+  /** The debounce time (in milliseconds) for filtering as the user types. */
+  wait?: number;
+};
+
+type ReturnType<T> = {
+  searchText: string;
+  onSearch: (value: string) => void;
+  filteredData: T[] | undefined;
 };
 
 /**
@@ -17,13 +27,14 @@ type FilterType<T> = {
  *
  * @param {FilterType<T>} options - Options for the filter hook.
  *
- * @returns {{
- *   searchText: string,
- *   onSearch: (value: string) => void,
- *   filteredData: T[] | undefined
- * }} - An object containing the search text, search function, and the filtered data.
+ * @returns {ReturnType<T>} - An object containing the search text, search function, and the filtered data.
  */
-const useFilter = <T>({ predicate, data, initialData }: FilterType<T>) => {
+const useFilter = <T>({
+  predicate,
+  data,
+  initialData,
+  wait = 500,
+}: FilterType<T>): ReturnType<T> => {
   const [searchText, setSearchText] = useState<string>('');
   const [filteredData, setFilteredData] = useState<T[] | undefined>(
     initialData,
@@ -34,7 +45,7 @@ const useFilter = <T>({ predicate, data, initialData }: FilterType<T>) => {
     getFilteredData(value);
   };
 
-  const getFilteredData = (value: string) => {
+  const getFilteredData = debounce((value: string) => {
     if (!data) {
       setFilteredData(undefined);
       return;
@@ -42,7 +53,7 @@ const useFilter = <T>({ predicate, data, initialData }: FilterType<T>) => {
 
     const result = data.filter(d => predicate(d, value));
     setFilteredData(isArrayEmpty(result) ? undefined : result);
-  };
+  }, wait);
 
   return { searchText, onSearch, filteredData };
 };

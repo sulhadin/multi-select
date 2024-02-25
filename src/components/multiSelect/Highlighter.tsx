@@ -1,9 +1,23 @@
+import { ReactNode } from 'react';
+
 type HighlighterProps = {
+  /**  The entire text to be highlighted.*/
   text: string;
+  /** The text to highlight within the text property value.*/
   highlight?: string | null;
 };
 
-const Highlighter = ({ text, highlight }: HighlighterProps) => {
+/**
+ * The Highlighter component subcomponent of MultiSelectOption.
+ * It highlights the searched text within provided text.
+ *
+ * @example
+ * <Highlighter text="Option 1" highlight="1"/>
+ *
+ * @param {HighlighterProps} props The props for the Highlighter component.
+ * @returns {ReactNode} The Highlighter component.
+ */
+const Highlighter = ({ text, highlight }: HighlighterProps): ReactNode => {
   const highlightText = () => {
     if (!highlight || !text) {
       return text;

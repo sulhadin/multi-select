@@ -1,0 +1,39 @@
+ .multi-select .search-area {
+    @apply border rounded-md p-2 mt-5 flex items-center gap-1;
+}
+.multi-select .input-container {
+    @apply flex flex-wrap gap-1 grow;
+}
+.multi-select .selected-items {
+    @apply inline-flex gap-1 p-1 rounded bg-neutral-200 items-center cursor-default;
+}
+.multi-select .remove-selected-item {
+    @apply bg-neutral-500 w-5 h-5 rounded inline-flex items-center text-sm justify-center text-white  hover:text-red-950 cursor-pointer hover:bg-red-300;
+}
+.multi-select .remove-selected-item .button-active {
+    @apply bg-red-300 text-red-950 ;
+}
+.multi-select input {
+    @apply bg-transparent min-w-2 focus:ring-0 focus:outline-none flex-1;
+}
+.multi-select .chevron {
+    @apply cursor-pointer text-neutral-500 transition-transform ease-in-out;
+}
+.multi-select .chevron-rotate {
+    @apply rotate-180;
+}
+.multi-select .options-panel {
+    @apply list-none divide-y border p-1 rounded-md mt-2 max-h-96 overflow-y-scroll;
+}
+.multi-select .options-panel .options-item {
+    @apply flex items-center gap-2 px-1 hover:bg-neutral-300 cursor-pointer py-2;
+}
+ .multi-select .options-panel .options-item.item-active {
+    @apply bg-neutral-200;
+}
+ .multi-select .options-panel .options-item .check {
+    @apply h-3 w-3 flex-none text-blue-600;
+}
+.multi-select .options-panel  .empty-item {
+    @apply text-center px-1;
+}

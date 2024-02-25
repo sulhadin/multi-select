@@ -8,13 +8,17 @@
     "build": "tsc && vite build",
     "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prettier": "prettier --write **/*.ts"
+    "prettier": "prettier --write **/*.ts",
+    "build:css": "npx tailwindcss -i ./index.css -o ./output.css --watch"
   },
   "dependencies": {
+    "clsx": "^2.1.0",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.11.19",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",

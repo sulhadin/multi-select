@@ -1,32 +1,98 @@
-import { useState, ChangeEvent, KeyboardEvent, useRef, ReactNode } from 'react';
-import useFilter from '@/libs/useFilter.ts';
-import { SearchContext } from '@Components/multiSelect/multiSelectContext.ts';
-import MultiSelectOption from '@Components/multiSelect/MultiSelectOption.tsx';
+import {
+  useState,
+  ChangeEvent,
+  KeyboardEvent,
+  useRef,
+  ReactNode,
+  useEffect,
+} from 'react';
 
+import clsx from 'clsx';
+
+import useFilter from '@/libs/useFilter.ts';
+import MultiSelectOption from '@Components/multiSelect/MultiSelectOption.tsx';
+import { SearchContext } from '@Components/multiSelect/multiSelectContext.ts';
+
+/**
+ * BaseObject serves as a base interface for objects with a numeric or string id and possibly
+ * other properties of unknown type.
+ */
 interface BaseObject {
-  id: number;
-  [key: string]: any;
+  id: number | string;
+  [key: string]: unknown;
 }
 
+/**
+ * MultiSelectProps is an interface for the MultiSelect component's properties. The component uses
+ * these properties to perform render and filtering operations.
+ */
 interface MultiSelectProps<T extends BaseObject> {
   options: T[];
   filterField: keyof T & string;
   render: (option: T, index: number) => ReactNode;
   placeholder?: string;
+  empty?: ReactNode;
 }
 
+/**
+ * Function Component MultiSelect
+ *
+ * MultiSelect is used to render a selection box with multiple choices for the user.
+ *
+ * @component
+ * @param {Object} props - The properties object for the MultiSelect component.
+ * @param {Array} props.options - The array of options to show in the drop-down list in the format specified by the BaseObject interface.
+ * @param {string} props.filterField - The name of the field in the options objects to filter results.
+ * @param {Function} props.render - A callback function to customize how each option should be rendered.
+ * This function should return valid JSX and it will be passed two arguments:
+ *    1. the option object
+ *    2. the index of the option object within the options array
+ * @param {string} [props.placeholder] - A string that displays as placeholder in the input text.
+ * @param {JSX.Element} [props.empty] - JSX Element to return when no items found on filtering.
+ *
+ * @returns {JSX.Element} A formatted multi select box.
+ *
+ * @example
+ * <MultiSelect
+ *    placeholder={"Search for some surprise"}
+ *    filterField={"name"}
+ *    options={[
+ *      {
+ *        id: 1,
+ *        name: 'Option 1',
+ *        image: 'url-to-image-1',
+ *        description: "Lorem ipsum",
+ *      }
+ *    ]}
+ *    render={(option) => (
+ *      <MultiSelect.Option
+ *        image={option.image}
+ *        title={option.name}
+ *        description={option.description}
+ *      />
+ *    )}
+ * />
+ */
 const MultiSelect = <T extends BaseObject>({
   options,
   filterField,
   render,
   placeholder,
-}: MultiSelectProps<T>) => {
+  empty,
+}: MultiSelectProps<T>): ReactNode => {
   const [active, setActive] = useState<number>(0);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
-  const [indexOfSelectedItems, setIndexOfSelectedItems] = useState<number>(0);
+  const [indexOfSelectedItems, setIndexOfSelectedItems] = useState<number>(-1);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const selectedItem = document.querySelector(
+      '.multi-select .options-panel .options-item.item-active',
+    );
+    selectedItem?.scrollIntoView();
+  }, [active]);
 
   const filter = (item: T, search: string) => {
     const value = item[filterField];
@@ -52,13 +118,17 @@ const MultiSelect = <T extends BaseObject>({
     setShowSuggestions(true);
   };
 
-  const handleClick = (option: T) => {
-    toggleItem(option);
+  const resetState = () => {
     onSearch('');
     setActive(-1);
 
     setShowSuggestions(false);
     inputRef.current?.focus();
+  };
+
+  const handleClick = (option: T) => {
+    toggleItem(option);
+    resetState();
   };
 
   const handleUpDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -90,6 +160,26 @@ const MultiSelect = <T extends BaseObject>({
       setIndexOfSelectedItems(-1);
     }
   };
+  const handleEscape = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      resetState();
+    }
+  };
+
+  const handleBackspace = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      setSelectedItems(state => {
+        if (state.length === 0) {
+          return state;
+        }
+
+        const updatedSelectedItems = [...state];
+        updatedSelectedItems.pop();
+
+        return updatedSelectedItems;
+      });
+    }
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -101,6 +191,8 @@ const MultiSelect = <T extends BaseObject>({
 
     handleLeftRight(e);
     handleUpDown(e);
+    handleBackspace(e);
+    handleEscape(e);
   };
 
   const toggleItem = (option: T) => {
@@ -131,72 +223,67 @@ const MultiSelect = <T extends BaseObject>({
 
   return (
     <SearchContext.Provider value={searchText}>
-      <div className={'border rounded-md p-2 mt-5 flex items-center gap-1'}>
-        <div className={'flex flex-wrap gap-1 grow'}>
-          {selectedItems.map((selectedItem, index) => (
-            <div
-              key={selectedItem.id}
-              className={
-                'inline-flex gap-1 p-1 rounded bg-neutral-200 items-center cursor-default'
-              }
-            >
-              <div>{selectedItem.name}</div>
+      <div className={'multi-select'}>
+        <div className={'search-area'}>
+          <div className={'input-container'}>
+            {selectedItems.map((selectedItem, index) => (
+              <div key={selectedItem.id} className={'selected-items'}>
+                <div>{selectedItem[filterField] as string}</div>
 
-              <div
-                onClick={() => toggleItem(selectedItem)}
-                className={
-                  'bg-neutral-500 w-5 h-5 rounded inline-flex items-center  justify-center text-white  hover:text-red-950 cursor-pointer hover:bg-red-300' +
-                  (indexOfSelectedItems === index
-                    ? ' bg-red-300 text-red-950'
-                    : ' ')
-                }
-              >
-                <span className={' text-sm '}>x</span>
+                <div
+                  onClick={() => toggleItem(selectedItem)}
+                  className={clsx('remove-selected-item', {
+                    'button-active': indexOfSelectedItems === index,
+                  })}
+                >
+                  <span>x</span>
+                </div>
               </div>
-            </div>
-          ))}
-          <input
-            placeholder={placeholder}
-            ref={inputRef}
-            type="text"
-            className={
-              'bg-transparent min-w-2 focus:ring-0 focus:outline-none flex-1'
-            }
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            value={searchText}
-          />
+            ))}
+            <input
+              placeholder={placeholder}
+              ref={inputRef}
+              type="text"
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              value={searchText}
+            />
+          </div>
+          <div
+            className={clsx('chevron', {
+              'chevron-rotate': showSuggestions,
+            })}
+            onClick={onCaretClick}
+          >
+            &#9660;
+          </div>
         </div>
-        <div className={'cursor-pointer'} onClick={onCaretClick}>
-          &#9660;
-        </div>
-      </div>
-      {showSuggestions && (
-        <ul className={'list-none divide-y border p-1 rounded-md mt-2'}>
-          {filteredData.length === 0 && (
-            <li className={'text-center gap-2 px-1 '}>Not found</li>
-          )}
+        {showSuggestions && (
+          <ul className={'options-panel'}>
+            {filteredData.length === 0 && (
+              <li className={'empty-item'}>{empty || 'Not found'}</li>
+            )}
 
-          {filteredData.map((option, index) => (
-            <li
-              key={option.id}
-              className={
-                'flex items-center gap-2 px-1 hover:bg-gray-200 cursor-pointer py-2 ' +
-                (active === index ? 'bg-gray-200' : '')
-              }
-              onClick={() => handleClick(option)}
-            >
-              <input
-                readOnly
-                className="form-checkbox h-3 w-3 text-blue-600"
-                type="checkbox"
-                checked={isChecked(option)}
-              />
-              <div className={'flex flex-col'}>{render(option, index)}</div>
-            </li>
-          ))}
-        </ul>
-      )}
+            {filteredData.map((option, index) => (
+              <li
+                key={option.id}
+                className={clsx('options-item', {
+                  'item-active': active === index,
+                })}
+                onClick={() => handleClick(option)}
+              >
+                <input
+                  readOnly
+                  className="check"
+                  type="checkbox"
+                  checked={isChecked(option)}
+                />
+                <div>{render(option, index)}</div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </SearchContext.Provider>
   );
 };
