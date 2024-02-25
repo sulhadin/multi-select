@@ -44,19 +44,13 @@ function App() {
         placeholder={'Search for some surprise'}
         filterField={'name'}
         options={characters}
-        render={option => {
-          return (
-            <div className={'flex items-center gap-3'}>
-              <img src={option.image} className={'w-12 h-12 rounded'} />
-              <div className={'flex flex-col'}>
-                <h1>{option.name}</h1>
-                <h6
-                  style={{ fontSize: '14px' }}
-                >{`${option.episode.length} Episodes`}</h6>
-              </div>
-            </div>
-          );
-        }}
+        render={option => (
+          <MultiSelect.Option
+            image={option.image}
+            title={option.name}
+            description={`${option.episode.length} Episodes`}
+          />
+        )}
       />
     </div>
   );

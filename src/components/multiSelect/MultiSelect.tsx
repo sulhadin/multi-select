@@ -1,5 +1,7 @@
 import { useState, ChangeEvent, KeyboardEvent, useRef, ReactNode } from 'react';
 import useFilter from '@/libs/useFilter.ts';
+import { SearchContext } from '@Components/multiSelect/multiSelectContext.ts';
+import MultiSelectOption from '@Components/multiSelect/MultiSelectOption.tsx';
 
 interface BaseObject {
   id: number;
@@ -128,7 +130,7 @@ const MultiSelect = <T extends BaseObject>({
   };
 
   return (
-    <>
+    <SearchContext.Provider value={searchText}>
       <div className={'border rounded-md p-2 mt-5 flex items-center gap-1'}>
         <div className={'flex flex-wrap gap-1 grow'}>
           {selectedItems.map((selectedItem, index) => (
@@ -193,32 +195,12 @@ const MultiSelect = <T extends BaseObject>({
               <div className={'flex flex-col'}>{render(option, index)}</div>
             </li>
           ))}
-
-          {/*{data.map((option, index) => (*/}
-          {/*  <li*/}
-          {/*    key={option.id}*/}
-          {/*    className={*/}
-          {/*      'flex items-center gap-2 px-1 hover:bg-gray-200 cursor-pointer ' +*/}
-          {/*      (active === index ? 'bg-gray-200' : '')*/}
-          {/*    }*/}
-          {/*    onClick={() => handleClick(option)}*/}
-          {/*  >*/}
-          {/*    <input*/}
-          {/*      readOnly*/}
-          {/*      className="form-checkbox h-3 w-3 text-blue-600"*/}
-          {/*      type="checkbox"*/}
-          {/*      checked={isChecked(option)}*/}
-          {/*    />*/}
-          {/*    <div className={'flex flex-col'}>*/}
-          {/*      <h1> {option.name}</h1>*/}
-          {/*      <p> 51 Episodes</p>*/}
-          {/*    </div>*/}
-          {/*  </li>*/}
-          {/*))}*/}
         </ul>
       )}
-    </>
+    </SearchContext.Provider>
   );
 };
+
+MultiSelect.Option = MultiSelectOption;
 
 export default MultiSelect;
