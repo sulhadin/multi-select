@@ -10,7 +10,8 @@ function App() {
   }
 
   return (
-    <div className={'w-96 mx-auto'}>
+    <div className={'w-96 mx-auto mt-5'}>
+      <h1 className={'mb-2 text-sm font-semibold'}>Search Rick&Morty:</h1>
       <MultiSelect
         placeholder={'Search for some surprise'}
         filterField={'name'}

@@ -549,6 +549,10 @@ video {
   margin-right: auto;
 }
 
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
 .flex {
   display: flex;
 }
@@ -586,7 +590,6 @@ video {
 }
 
 .multi-select .search-area {
-  margin-top: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;

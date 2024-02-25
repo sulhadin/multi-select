@@ -34,13 +34,13 @@ const MultiSelectOption = ({
   const searchedText = useGetSearchedText();
 
   return (
-    <div className={'flex items-center gap-3'}>
-      <img src={image} className={'w-12 h-12 rounded'} />
-      <div className={'flex flex-col'}>
+    <div className={'inner-item'}>
+      <img src={image} />
+      <div className={'container'}>
         <h1>
           <Highlighter highlight={searchedText} text={title} />
         </h1>
-        <h6 style={{ fontSize: '14px' }}>{description}</h6>
+        <h6>{description}</h6>
       </div>
     </div>
   );

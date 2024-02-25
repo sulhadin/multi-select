@@ -1,5 +1,5 @@
  .multi-select .search-area {
-    @apply border rounded-md p-2 mt-5 flex items-center gap-1;
+    @apply border rounded-md p-2 flex items-center gap-1;
 }
 .multi-select .input-container {
     @apply flex flex-wrap gap-1 grow;
@@ -37,3 +37,23 @@
 .multi-select .options-panel  .empty-item {
     @apply text-center px-1;
 }
+
+/*MultiSelectOption*/
+ .multi-select .options-panel  .options-item .inner-item {
+    @apply flex items-center gap-3;
+}
+
+ .multi-select .options-panel  .options-item .inner-item img {
+     @apply w-12 h-12 rounded;
+ }
+
+ .multi-select .options-panel  .options-item .inner-item .container {
+     @apply flex flex-col;
+ }
+
+ .multi-select .options-panel  .options-item .inner-item h1 {
+     @apply text-base;
+ }
+ .multi-select .options-panel  .options-item .inner-item h6 {
+     @apply text-sm text-neutral-600;
+ }
